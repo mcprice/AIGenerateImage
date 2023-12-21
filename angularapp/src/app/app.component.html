@@ -1,24 +1,19 @@
-<h1 id="tableLabel">Weather Forecast</h1>
+<main>
+  <mat-toolbar color="primary">
+    <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>menu</mat-icon></button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>photo</mat-icon>
+        <span>Generate Image</span>
+      </button>
+    </mat-menu>
+    <span>Open-AI Generation Tool</span>
+  </mat-toolbar>
+  <content class="image-generator-container">
+    <ai-generate-image></ai-generate-image>
+  </content>
+</main>
 
-<p>This component demonstrates fetching data from the server.</p>
 
-<p *ngIf="!forecasts"><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.</em></p>
 
-<table *ngIf="forecasts">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let forecast of forecasts">
-            <td>{{ forecast.date }}</td>
-            <td>{{ forecast.temperatureC }}</td>
-            <td>{{ forecast.temperatureF }}</td>
-            <td>{{ forecast.summary }}</td>
-        </tr>
-    </tbody>
-</table>
+
