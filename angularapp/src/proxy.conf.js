@@ -1,7 +1,7 @@
 const PROXY_CONFIG = [
   {
     context: [
-      "/weatherforecast",
+      "/aigenerateimage"
     ],
     target: "https://localhost:7032",
     secure: false

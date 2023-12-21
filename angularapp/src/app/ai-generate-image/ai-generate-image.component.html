@@ -1,0 +1,35 @@
+<div class="component-with-margins">
+  <h1>Generate Image</h1>
+  <p>Use DALLE-3 to generate an image based on your prompt.</p>
+  <section>
+    <form>
+      <mat-form-field class="full-width">
+        <mat-label>Type Your Prompt Here</mat-label>
+        <input matInput placeholder="Ex. A white fox in a sunny forest." #textPrompt>
+      </mat-form-field>
+
+      <br />
+
+      <button mat-raised-button color="primary" type="button" (click)="getImages(textPrompt.value)">Generate</button>
+    </form>
+  </section>
+
+  <section *ngIf="showLoadingArea">
+    <br />
+    <p>Generating...</p>
+    <mat-spinner></mat-spinner>
+  </section>
+
+  <br />
+
+  <mat-card class="example-card" *ngFor="let image of generatedImages">
+    <mat-card-header>
+      <button mat-raised-button color="primary" type="button" (click)="downloadImage(image.url,image.fileName)">DOWNLOAD</button>
+    </mat-card-header>
+    <br/>
+    <mat-card-content>
+      <img class="full-width" src="{{ image.url }}" />
+    </mat-card-content>
+  </mat-card>
+
+</div>

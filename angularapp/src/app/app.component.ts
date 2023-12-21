@@ -1,5 +1,7 @@
+import { AiGenerateImageComponent } from './ai-generate-image/ai-generate-image.component';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+
 
 @Component({
   selector: 'app-root',
@@ -7,13 +9,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  public forecasts?: WeatherForecast[];
-
-  constructor(http: HttpClient) {
-    http.get<WeatherForecast[]>('/weatherforecast').subscribe(result => {
-      this.forecasts = result;
-    }, error => console.error(error));
-  }
+  constructor() {}
 
   title = 'AI Image Generator';
 }
