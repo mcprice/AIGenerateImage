@@ -1,7 +1,9 @@
 const PROXY_CONFIG = [
   {
     context: [
-      "/aigenerateimage"
+      "/api/aiimage/generateimage",
+      "/api/aiimage/storeimage",
+      "/assets"
     ],
     target: "https://localhost:7032",
     secure: false

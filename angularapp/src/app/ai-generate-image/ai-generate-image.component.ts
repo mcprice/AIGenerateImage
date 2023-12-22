@@ -1,6 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
+import * as FileSaver from 'file-saver';
 import { FileSaverService } from 'ngx-filesaver';
+import { Buffer } from 'buffer/';
 
 @Component({
   selector: 'ai-generate-image',
@@ -10,10 +12,12 @@ import { FileSaverService } from 'ngx-filesaver';
 export class AiGenerateImageComponent {
   public generatedImages?: AIGenerateImage[];
   public showLoadingArea: boolean = false;
+
   constructor(private http: HttpClient, private _FileSaverService: FileSaverService) { }
 
   title = 'AI Generate Image';
 
+  // Do the API call to generate images based on the prompt the user typed.
   getImages(promptText: string) {
     if (!promptText) {
       return;
@@ -24,7 +28,7 @@ export class AiGenerateImageComponent {
     // Add safe, URL encoded search parameter if the prompt has been typed in.
     const options = promptText ? { params: new HttpParams().set('promptText', promptText) } : {};
 
-    this.http.get<AIGenerateImage[]>('/aigenerateimage', options).subscribe(result => {
+    this.http.get<AIGenerateImage[]>('/api/aiimage/generateimage', options).subscribe(result => {
       this.generatedImages = result;
       this.showLoadingArea = false;
     }, error => {
@@ -33,22 +37,41 @@ export class AiGenerateImageComponent {
     });
   }
 
+  // Trigger the download of the image to the app storage.
   downloadImage(imageUrl: string, fileName: string) {
-    if (!imageUrl) {
+    if (!imageUrl || !fileName) {
       return;
     }
 
-    this.http.get(imageUrl, {
-      headers: { "Access-Control-Allow-Origin": imageUrl },
-      responseType: 'blob' // This must be a Blob type
-    }).subscribe(res => {
-      this._FileSaverService.save((<any>res)._body, fileName);
-    });
+    const payload = {
+      imageUrl: imageUrl,
+      fileName: fileName
+    }
 
+    this.http.post<StoreImageResult>('/api/aiimage/storeimage', payload).subscribe(result => {
+      this.onSave(result);
+    }, error => {
+      console.error(error);
+    });
+  }
+
+  onSave(storedImage: StoreImageResult) {
+
+    fetch(`/assets/${storedImage.imageFileName}`)
+      .then(response => response.arrayBuffer())
+      .then(imageBuffer => {
+        const blob = new Blob([Buffer.from(imageBuffer)]); ;
+        this._FileSaverService.save(blob, storedImage.imageFileName);
+      });
   }
 }
 
 interface AIGenerateImage {
   url: string;
   fileName: string;
+}
+
+interface StoreImageResult {
+  imagePath: string;
+  imageFileName: string;
 }
